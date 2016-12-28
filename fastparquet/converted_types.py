@@ -15,7 +15,6 @@ import codecs
 import datetime
 import json
 import logging
-import numba
 import numpy as np
 import os
 import pandas as pd
@@ -169,7 +168,6 @@ def convert(data, se):
     return data
 
 
-@numba.njit(nogil=True)
 def time_shift(indata, outdata, factor=1000):  # pragma: no cover
     for i in range(len(indata)):
         if indata[i] == nat:

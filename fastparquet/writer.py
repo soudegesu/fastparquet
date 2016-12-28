@@ -11,7 +11,6 @@ import sys
 import thriftpy
 import warnings
 
-import numba
 
 from thriftpy.protocol.compact import TCompactProtocolFactory
 from thriftpy.protocol.exc import TProtocolException
@@ -169,7 +168,6 @@ def infer_object_encoding(data):
         raise ValueError("Data type conversion unknown: %s" % dtype)
 
 
-@numba.njit(nogil=True)
 def time_shift(indata, outdata, factor=1000):  # pragma: no cover
     for i in range(len(indata)):
         if indata[i] == nat:
@@ -224,7 +222,6 @@ def encode_plain(data, se):
         return out.tobytes()
 
 
-@numba.njit(nogil=True)
 def encode_unsigned_varint(x, o):  # pragma: no cover
     while x > 127:
         o.write_byte((x & 0x7F) | 0x80)
@@ -232,13 +229,11 @@ def encode_unsigned_varint(x, o):  # pragma: no cover
     o.write_byte(x)
 
 
-@numba.jit(nogil=True)
 def zigzag(n):  # pragma: no cover
     " 32-bit only "
     return (n << 1) ^ (n >> 31)
 
 
-@numba.njit(nogil=True)
 def encode_bitpacked_inv(values, width, o):  # pragma: no cover
     bit = 16 - width
     right_byte_mask = 0b11111111
@@ -255,7 +250,6 @@ def encode_bitpacked_inv(values, width, o):  # pragma: no cover
         o.write_byte((bits & left_byte_mask) >> 8)
 
 
-@numba.njit(nogil=True)
 def encode_bitpacked(values, width, o):  # pragma: no cover
     """
     Write values packed into width-bits each (which can be >8)
